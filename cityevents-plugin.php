@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: cityevents
- * Description: Recupera eventi da un URL JSON e li mostra in un widget o tramite shortcode.
+ * Description: CityEvents Widget – Pubblica agenda eventi culturali del tuo comune
  * Version: 0.1.3
  * Author: Cognita.it
  * License: GPLv2 or later
@@ -65,10 +65,10 @@ class EJW_Plugin {
     }
 
     public static function register_settings() {
-        register_setting('ejw_settings', 'ejw_default_feed_url', ['type' => 'string', 'sanitize_callback' => 'esc_url_raw', 'default' => '']);
-        register_setting('ejw_settings', 'ejw_default_limit', ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 5]);
+        register_setting('ejw_settings', 'ejw_default_feed_url', ['type' => 'string', 'sanitize_callback' => 'esc_url_raw', 'default' => 'https://iltaccodibacco.it/roma/events.json']);
+        register_setting('ejw_settings', 'ejw_default_limit', ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 10]);
         register_setting('ejw_settings', 'ejw_default_cache_minutes', ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 15]);
-        register_setting('ejw_settings', 'ejw_default_date_format', ['type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')]);
+        register_setting('ejw_settings', 'ejw_default_date_format', ['type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => get_option('date_format') ]);
 
         add_settings_section('ejw_main', __('Impostazioni predefinite', self::TD), function () {
             echo '<p>' . esc_html__('Questi valori sono usati come default per widget e shortcode (possono essere sovrascritti).', self::TD) . '</p>';
@@ -285,7 +285,7 @@ class EJW_Renderer {
             $start_raw = $ev['start_date'] ?? '';
             $location  = isset($ev['location']) ? wp_strip_all_tags($ev['location']) : '';
             $image     = isset($ev['image']) ? esc_url($ev['image']) : '';
-           // $dt        = $start_raw ? strtotime($start_raw) : false;
+            $dt        = $start_raw ? strtotime($start_raw) : false;
 
             $html .= '<li class="ejw-event" itemprop="event" itemscope itemtype="https://schema.org/Event">';
             if ($image) {
@@ -293,15 +293,19 @@ class EJW_Renderer {
             }
             $html .= '<div class="ejw-event-body">';
             if ($url) {
-                $html .= '<a class="ejw-event-title" href="' . $url . '" target="_blank" rel="noopener" itemprop="url"><span itemprop="name">' . esc_html($title) . '</span></a>';
+                $html .= '<a class="ejw-event-title" href="' . $url . '" target="_blank" rel="noopener" itemprop="url"><span itemprop="name">' . ($title) . '</span></a>';
             } else {
-                $html .= '<span class="ejw-event-title" itemprop="name">' . esc_html($title) . '</span>';
+                $html .= '<span class="ejw-event-title" itemprop="name">' . ($title) . '</span>';
             }
 
             if ($p['show_date'] && $dt) {
                 $html .= '<div class="ejw-event-date"><time itemprop="startDate" datetime="' . esc_attr(gmdate('c', $dt)) . '">'
                     . esc_html(wp_date($p['date_format'], $dt)) . '</time></div>';
              }
+
+            /*
+                $html .= '<div class="ejw-event-date">'
+                    . esc_html($ev['start_date']) . '</div>';*/
 
             if ($p['show_location'] && $location) {
                 $html .= '<div class="ejw-event-location" itemprop="location" itemscope itemtype="https://schema.org/Place">'
@@ -387,7 +391,7 @@ class EJW_Renderer {
                 'start_date'  => self::pick($it, ['start_date','start','date','datetime','startDate']),
                 'end_date'    => self::pick($it, ['end_date','end','endDate']),
                 'url'         => self::pick($it, ['url','link','url_evento']),
-                'location'    => self::pick($it, ['location','des_locale','venue','place']),
+                'location'    => self::pick($it, ['location','venue','place']),
                 'image'       => self::pick($it, ['image','cover','img']),
                 'description' => self::pick($it, ['description','des_evento','summary']),
             ];

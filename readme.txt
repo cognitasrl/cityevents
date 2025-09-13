@@ -1,33 +1,33 @@
-=== CityEvents Widget ===
-Contributors: tuousername
-Donate link: https://iltaccodibacco.it
-Tags: events, widget, json, calendar
+=== CityEvents Widget – Pubblica l'agenda eventi culturali del tuo comune ===
+Contributors: cognita, taccodibacco
+Tags: eventi, cultura, concerti, festival, sagre, calendario, agenda
 Requires at least: 5.8
-Tested up to: 6.5
+Tested up to: 6.6
+Stable tag: 0.1.3
 Requires PHP: 7.4
-Stable tag: 1.0.0
-License: GPL-2.0-or-later
+License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Un widget che mostra eventi recuperati da un feed JSON.
+Visualizza sul tuo sito WordPress gli eventi culturali provenienti da iltaccodibacco.it, filtrati per comune e con raggio di 30 km.
 
-== Description ==
-CityEvents Widget permette di caricare un elenco di eventi da un feed JSON esterno
-e mostrarli sul sito WordPress tramite un widget o shortcode.
+== Descrizione ==
+
+CityEvents Widget ti permette di integrare facilmente sul tuo sito WordPress gli eventi culturali da [iltaccodibacco.it](https://www.iltaccodibacco.it), il portale che copre eventi in tutta Italia.
+
+Puoi scegliere un comune e il plugin mostrerà automaticamente tutti gli eventi nel raggio di 30 km, così i tuoi visitatori avranno sempre una panoramica aggiornata di concerti, spettacoli, mostre, festival e sagre.
+
+**Funzionalità principali**
+- Integrazione diretta con l’hub eventi iltaccodibacco.it.
+- Selezione del comune di riferimento.
+- Inclusione automatica degli eventi entro 30 km.
+- Visualizzazione tramite **widget** o **shortcode**.
+- Layout responsive, adatto a desktop, tablet e smartphone.
+- Aggiornamento in tempo reale dei contenuti.
 
 == Installation ==
-1. Carica la cartella `cityevents-widget` in `wp-content/plugins/`.
-2. Attiva il plugin da “Plugin → Aggiungi nuovo”.
-3. Configura il feed JSON da “Impostazioni → CityEvents”.
 
-== Frequently Asked Questions ==
-= Posso usare lo shortcode? =
-Sì: `[events_widget feed_url="https://iltaccodibacco.it/nomecitta/events.json" limit="5"]`
+1. Carica la cartella del plugin `cityevents-widget` nella directory `/wp-content/plugins/`.
+2. Attiva il plugin dal menu "Plugin" di WordPress.
+3. Vai in **Impostazioni → CityEvents** e seleziona il comune di riferimento.
+4. Aggiungi il **widget CityEvents** alla tua sidebar oppure usa lo shortcode:
 
-== Screenshots ==
-1. Schermata del widget nella sidebar
-2. Pagina impostazioni nel backend
-
-== Changelog ==
-= 1.0.0 =
-* Prima release pubblica
