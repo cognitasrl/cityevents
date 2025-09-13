@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: cityevents
- * Description: CityEvents Widget – Pubblica agenda eventi culturali del tuo comune
+ * Description: CityEvents – Pubblica agenda eventi culturali del tuo comune
  * Version: 0.1.3
  * Author: Cognita.it
  * License: GPLv2 or later
@@ -23,9 +23,10 @@ class EJW_Plugin {
         add_action('admin_init', [__CLASS__, 'register_settings']);
 
         // Textdomain
+        /*
         add_action('plugins_loaded', function () {
-            load_plugin_textdomain(self::TD, false, dirname(plugin_basename(__FILE__)) . '/languages');
-        });
+            load_plugin_textdomain('cityevents', false, dirname(plugin_basename(__FILE__)) . '/languages');
+        });*/
     }
 
     /** Shortcode: [events_widget feed_url="https://..." limit="5" title="Prossimi eventi"] */
@@ -56,8 +57,8 @@ class EJW_Plugin {
     // === Settings page (opzionale) ===
     public static function add_settings_page() {
         add_options_page(
-            __('CityEvents', self::TD),
-            __('CityEvents', self::TD),
+            __('CityEvents', 'cityevents'),
+            __('CityEvents', 'cityevents'),
             'manage_options',
             'ejw-settings',
             [__CLASS__, 'settings_page_html']
@@ -70,34 +71,34 @@ class EJW_Plugin {
         register_setting('ejw_settings', 'ejw_default_cache_minutes', ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 15]);
         register_setting('ejw_settings', 'ejw_default_date_format', ['type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => get_option('date_format') ]);
 
-        add_settings_section('ejw_main', __('Impostazioni predefinite', self::TD), function () {
-            echo '<p>' . esc_html__('Questi valori sono usati come default per widget e shortcode (possono essere sovrascritti).', self::TD) . '</p>';
+        add_settings_section('ejw_main', __('Impostazioni predefinite', 'cityevents'), function () {
+            echo '<p>' . esc_html__('Questi valori sono usati come default per widget e shortcode (possono essere sovrascritti).', 'cityevents') . '</p>';
         }, 'ejw-settings');
 
-        add_settings_field('ejw_default_feed_url', __('URL JSON predefinito', self::TD), function () {
+        add_settings_field('ejw_default_feed_url', __('URL JSON predefinito', 'cityevents'), function () {
             printf('<input type="url" class="regular-text" name="ejw_default_feed_url" value="%s" placeholder="https://example.com/events.json"/>',
                 esc_attr(get_option('ejw_default_feed_url', '')));
         }, 'ejw-settings', 'ejw_main');
 
-        add_settings_field('ejw_default_limit', __('Numero eventi', self::TD), function () {
+        add_settings_field('ejw_default_limit', __('Numero eventi', 'cityevents'), function () {
             printf('<input type="number" min="1" name="ejw_default_limit" value="%d" />', intval(get_option('ejw_default_limit', 5)));
         }, 'ejw-settings', 'ejw_main');
 
-        add_settings_field('ejw_default_cache_minutes', __('Cache (minuti)', self::TD), function () {
+        add_settings_field('ejw_default_cache_minutes', __('Cache (minuti)', 'cityevents'), function () {
             printf('<input type="number" min="1" name="ejw_default_cache_minutes" value="%d" />', intval(get_option('ejw_default_cache_minutes', 15)));
         }, 'ejw-settings', 'ejw_main');
 
-        add_settings_field('ejw_default_date_format', __('Formato data', self::TD), function () {
+        add_settings_field('ejw_default_date_format', __('Formato data', 'cityevents'), function () {
             printf('<input type="text" class="regular-text" name="ejw_default_date_format" value="%s" placeholder="Y-m-d H:i" />',
                 esc_attr(get_option('ejw_default_date_format', get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format'))));
-            echo '<p class="description">' . esc_html__('Usa i formati di wp_date(), es. "d/m/Y H:i".', self::TD) . '</p>';
+            echo '<p class="description">' . esc_html__('Usa i formati di wp_date(), es. "d/m/Y H:i".', 'cityevents') . '</p>';
         }, 'ejw-settings', 'ejw_main');
     }
 
     public static function settings_page_html() {
         if (!current_user_can('manage_options')) { return; } ?>
         <div class="wrap">
-            <h1><?php echo esc_html__('Events JSON Widget', self::TD); ?></h1>
+            <h1><?php echo esc_html__('Events JSON Widget', 'cityevents'); ?></h1>
             <form method="post" action="options.php">
                 <?php
                 settings_fields('ejw_settings');
@@ -106,8 +107,8 @@ class EJW_Plugin {
                 ?>
             </form>
             <hr>
-            <h2><?php echo esc_html__('Formato JSON atteso', self::TD); ?></h2>
-            <p><?php echo esc_html__('Il feed deve restituire un array JSON di eventi. Campi consigliati:', self::TD); ?></p>
+            <h2><?php echo esc_html__('Formato JSON atteso', 'cityevents'); ?></h2>
+            <p><?php echo esc_html__('Il feed deve restituire un array JSON di eventi. Campi consigliati:', 'cityevents'); ?></p>
             <pre>{
   "events": [
     {
@@ -121,7 +122,7 @@ class EJW_Plugin {
     }
   ]
 }</pre>
-            <p><?php echo esc_html__('Sono accettati anche JSON come semplice array (senza chiave "events").', self::TD); ?></p>
+            <p><?php echo esc_html__('Sono accettati anche JSON come semplice array (senza chiave "events").', 'cityevents'); ?></p>
         </div>
     <?php }
 }
@@ -131,8 +132,8 @@ class EJW_Widget extends WP_Widget {
     public function __construct() {
         parent::__construct(
             'ejw_widget',
-            __('Events JSON Widget', EJW_Plugin::TD),
-            ['description' => __('Mostra eventi da un feed JSON', EJW_Plugin::TD)]
+            __('Cityevents', 'cityevents'),
+            ['description' => __('Display italy cultural events', 'cityevents')]
         );
     }
 
@@ -149,11 +150,11 @@ class EJW_Widget extends WP_Widget {
         $instance = wp_parse_args((array) $instance, $defaults);
 
         $fields = [
-            'title'         => ['label' => __('Titolo', EJW_Plugin::TD), 'type' => 'text'],
-            'feed_url'      => ['label' => __('URL JSON', EJW_Plugin::TD), 'type' => 'url'],
-            'limit'         => ['label' => __('Numero eventi', EJW_Plugin::TD), 'type' => 'number', 'min' => 1],
-            'cache_minutes' => ['label' => __('Cache (minuti)', EJW_Plugin::TD), 'type' => 'number', 'min' => 1],
-            'date_format'   => ['label' => __('Formato data', EJW_Plugin::TD), 'type' => 'text'],
+            'title'         => ['label' => __('Titolo', 'cityevents'), 'type' => 'text'],
+            'feed_url'      => ['label' => __('URL JSON', 'cityevents'), 'type' => 'url'],
+            'limit'         => ['label' => __('Numero eventi', 'cityevents'), 'type' => 'number', 'min' => 1],
+            'cache_minutes' => ['label' => __('Cache (minuti)', 'cityevents'), 'type' => 'number', 'min' => 1],
+            'date_format'   => ['label' => __('Formato data', 'cityevents'), 'type' => 'text'],
         ];
         ?>
         <p>
@@ -178,13 +179,13 @@ class EJW_Widget extends WP_Widget {
             <input class="checkbox" type="checkbox" <?php checked($instance['show_date'], 1); ?>
                    id="<?php echo esc_attr($this->get_field_id('show_date')); ?>"
                    name="<?php echo esc_attr($this->get_field_name('show_date')); ?>" value="1">
-            <label for="<?php echo esc_attr($this->get_field_id('show_date')); ?>"><?php esc_html_e('Mostra data', EJW_Plugin::TD); ?></label>
+            <label for="<?php echo esc_attr($this->get_field_id('show_date')); ?>"><?php esc_html_e('Mostra data', 'cityevents'); ?></label>
         </p>
         <p>
             <input class="checkbox" type="checkbox" <?php checked($instance['show_location'], 1); ?>
                    id="<?php echo esc_attr($this->get_field_id('show_location')); ?>"
                    name="<?php echo esc_attr($this->get_field_name('show_location')); ?>" value="1">
-            <label for="<?php echo esc_attr($this->get_field_id('show_location')); ?>"><?php esc_html_e('Mostra luogo', EJW_Plugin::TD); ?></label>
+            <label for="<?php echo esc_attr($this->get_field_id('show_location')); ?>"><?php esc_html_e('Mostra luogo', 'cityevents'); ?></label>
         </p>
         <p>
             <label for="<?php echo esc_attr($this->get_field_id('cache_minutes')); ?>"><?php echo esc_html($fields['cache_minutes']['label']); ?></label>
@@ -223,12 +224,15 @@ class EJW_Widget extends WP_Widget {
             'cache_minutes' => intval($instance['cache_minutes'] ?? 15),
             'date_format'   => $instance['date_format'] ?? (get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')),
         ];
-        echo $args['before_widget'];
+        echo ($args['before_widget']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Theme-provided HTML wrapper
         if (!empty($params['title'])) {
-            echo $args['before_title'] . esc_html($params['title']) . $args['after_title'];
+            echo $args['before_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Theme-provided HTML wrapper
+            echo esc_html($params['title']);
+            echo $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Theme-provided HTML wrapper
         }
-        echo EJW_Renderer::render($params, true);
-        echo $args['after_widget'];
+        echo wp_kses_post(EJW_Renderer::render($params, true));
+        echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Theme-provided HTML wrapper
+
     }
 }
 
@@ -251,19 +255,19 @@ class EJW_Renderer {
         $html = '';
 
         if (empty($p['feed_url'])) {
-            $html .= '<p>' . esc_html__('Nessun URL del feed specificato.', EJW_Plugin::TD) . '</p>';
+            $html .= '<p>' . esc_html__('Nessun URL del feed specificato.', 'cityevents') . '</p>';
             return self::output($html, $return_html);
         }
 
         $events = self::fetch_events($p['feed_url'], $p['cache_minutes']);
 
         if (is_wp_error($events)) {
-            $html .= '<p>' . esc_html__('Errore nel recupero del feed:', EJW_Plugin::TD) . ' ' . esc_html($events->get_error_message()) . '</p>';
+            $html .= '<p>' . esc_html__('Errore nel recupero del feed:', 'cityevents') . ' ' . esc_html($events->get_error_message()) . '</p>';
             return self::output($html, $return_html);
         }
 
         if (empty($events)) {
-            $html .= '<p>' . esc_html__('Nessun evento disponibile.', EJW_Plugin::TD) . '</p>';
+            $html .= '<p>' . esc_html__('Nessun evento disponibile.', 'cityevents') . '</p>';
             return self::output($html, $return_html);
         }
 
@@ -354,14 +358,15 @@ class EJW_Renderer {
 
         $code = wp_remote_retrieve_response_code($resp);
         if ($code < 200 || $code >= 300) {
-            return new WP_Error('ejw_http_error', sprintf(__('HTTP %d dal feed', EJW_Plugin::TD), $code));
+            /* translators: %d = error http  */
+            return new WP_Error('ejw_http_error', sprintf(__('HTTP %d dal feed', 'cityevents'), $code));
         }
 
         $body = wp_remote_retrieve_body($resp);
         $json = json_decode($body, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            return new WP_Error('ejw_json_error', __('JSON non valido', EJW_Plugin::TD));
+            return new WP_Error('ejw_json_error', __('JSON non valido', 'cityevents'));
         }
 
         // Supporta { "events": [ ... ] } o [ ... ]
@@ -414,7 +419,7 @@ class EJW_Renderer {
 
     protected static function output($html, $return_html) {
         if ($return_html) { return $html; }
-        echo $html;
+        echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in render
         return '';
     }
 }

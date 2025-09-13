@@ -4,8 +4,13 @@
 /tests
 /bin
 /node_modules
-composer.json
+.git
+.github
+.idea
+bin
 composer.lock
 phpunit.xml*
 *.md
 dist
+.gitignore
+.distignore

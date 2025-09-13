@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PLUGIN_SLUG="cityevents-widget"
+PLUGIN_SLUG="cityevents"
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 DIST_DIR="${ROOT_DIR}/dist"
 TMP_DIR="${DIST_DIR}/${PLUGIN_SLUG}"
