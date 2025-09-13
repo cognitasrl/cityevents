@@ -2,7 +2,7 @@
 /**
  * Plugin Name: cityevents
  * Description: Recupera eventi da un URL JSON e li mostra in un widget o tramite shortcode.
- * Version: 0.1.2
+ * Version: 0.1.3
  * Author: Cognita.it
  * License: GPLv2 or later
  * Text Domain: cityevents
