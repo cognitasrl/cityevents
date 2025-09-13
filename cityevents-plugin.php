@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: CityEvents Widget
+ * Plugin Name: cityevents
  * Description: Recupera eventi da un URL JSON e li mostra in un widget o tramite shortcode.
- * Version: 0.1.1
+ * Version: 0.1.2
  * Author: Cognita.it
  * License: GPLv2 or later
  * Text Domain: cityevents
@@ -11,7 +11,7 @@
 if (!defined('ABSPATH')) { exit; }
 
 class EJW_Plugin {
-    const TD = 'cityevents-widget';
+    const TD = 'cityevents';
 
     public static function init() {
         // Widget & shortcode
@@ -56,8 +56,8 @@ class EJW_Plugin {
     // === Settings page (opzionale) ===
     public static function add_settings_page() {
         add_options_page(
-            __('Events JSON Widget', self::TD),
-            __('Events JSON Widget', self::TD),
+            __('CityEvents', self::TD),
+            __('CityEvents', self::TD),
             'manage_options',
             'ejw-settings',
             [__CLASS__, 'settings_page_html']
