@@ -382,13 +382,13 @@ class EJW_Renderer {
         foreach ($items as $it) {
             if (!is_array($it)) { continue; }
             $ev = [
-                'title'       => self::pick($it, ['title','name','titolo']),
-                'start_date'  => self::pick($it, ['start_date','start','date','datetime','data_inizio']),
-                'end_date'    => self::pick($it, ['end_date','end','data_fine']),
-                'url'         => self::pick($it, ['url','link','permalink']),
-                'location'    => self::pick($it, ['location','luogo','venue','place']),
+                'title'       => self::pick($it, ['title','name','nome_evento']),
+                'start_date'  => self::pick($it, ['start_date','start','date','datetime','data_evento']),
+                'end_date'    => self::pick($it, ['end_date','end','data_evento']),
+                'url'         => self::pick($it, ['url','link','url_evento']),
+                'location'    => self::pick($it, ['location','des_locale','venue','place']),
                 'image'       => self::pick($it, ['image','cover','img']),
-                'description' => self::pick($it, ['description','descrizione','summary']),
+                'description' => self::pick($it, ['description','des_evento','summary']),
             ];
             // Richiede almeno il titolo
             if (!empty($ev['title'])) {
