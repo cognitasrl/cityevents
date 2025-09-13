@@ -1,0 +1,11 @@
+/.git
+/.github
+/.idea
+/tests
+/bin
+/node_modules
+composer.json
+composer.lock
+phpunit.xml*
+*.md
+dist

@@ -37,7 +37,7 @@ class EJW_Plugin {
             'show_date'     => 1,
             'show_location' => 1,
             'cache_minutes' => get_option('ejw_default_cache_minutes', 15),
-            'date_format'   => get_option('ejw_default_date_format', get_option('date_format') . ' ' . get_option('time_format')),
+            'date_format'   => get_option('ejw_default_date_format', get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')),
         ], $atts, 'events_widget');
 
         $args = [
@@ -68,7 +68,7 @@ class EJW_Plugin {
         register_setting('ejw_settings', 'ejw_default_feed_url', ['type' => 'string', 'sanitize_callback' => 'esc_url_raw', 'default' => '']);
         register_setting('ejw_settings', 'ejw_default_limit', ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 5]);
         register_setting('ejw_settings', 'ejw_default_cache_minutes', ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 15]);
-        register_setting('ejw_settings', 'ejw_default_date_format', ['type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => get_option('date_format') . ' ' . get_option('time_format')]);
+        register_setting('ejw_settings', 'ejw_default_date_format', ['type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')]);
 
         add_settings_section('ejw_main', __('Impostazioni predefinite', self::TD), function () {
             echo '<p>' . esc_html__('Questi valori sono usati come default per widget e shortcode (possono essere sovrascritti).', self::TD) . '</p>';
@@ -89,7 +89,7 @@ class EJW_Plugin {
 
         add_settings_field('ejw_default_date_format', __('Formato data', self::TD), function () {
             printf('<input type="text" class="regular-text" name="ejw_default_date_format" value="%s" placeholder="Y-m-d H:i" />',
-                esc_attr(get_option('ejw_default_date_format', get_option('date_format') . ' ' . get_option('time_format'))));
+                esc_attr(get_option('ejw_default_date_format', get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format'))));
             echo '<p class="description">' . esc_html__('Usa i formati di wp_date(), es. "d/m/Y H:i".', self::TD) . '</p>';
         }, 'ejw-settings', 'ejw_main');
     }
@@ -144,7 +144,7 @@ class EJW_Widget extends WP_Widget {
             'show_date'     => 1,
             'show_location' => 1,
             'cache_minutes' => get_option('ejw_default_cache_minutes', 15),
-            'date_format'   => get_option('ejw_default_date_format', get_option('date_format') . ' ' . get_option('time_format')),
+            'date_format'   => get_option('ejw_default_date_format', get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')),
         ];
         $instance = wp_parse_args((array) $instance, $defaults);
 
@@ -209,7 +209,7 @@ class EJW_Widget extends WP_Widget {
         $instance['show_date']     = !empty($new_instance['show_date']) ? 1 : 0;
         $instance['show_location'] = !empty($new_instance['show_location']) ? 1 : 0;
         $instance['cache_minutes'] = max(1, absint($new_instance['cache_minutes'] ?? 15));
-        $instance['date_format']   = sanitize_text_field($new_instance['date_format'] ?? (get_option('date_format') . ' ' . get_option('time_format')));
+        $instance['date_format']   = sanitize_text_field($new_instance['date_format'] ?? (get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')));
         return $instance;
     }
 
@@ -221,7 +221,7 @@ class EJW_Widget extends WP_Widget {
             'show_date'     => !empty($instance['show_date']),
             'show_location' => !empty($instance['show_location']),
             'cache_minutes' => intval($instance['cache_minutes'] ?? 15),
-            'date_format'   => $instance['date_format'] ?? (get_option('date_format') . ' ' . get_option('time_format')),
+            'date_format'   => $instance['date_format'] ?? (get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')),
         ];
         echo $args['before_widget'];
         if (!empty($params['title'])) {
@@ -244,7 +244,7 @@ class EJW_Renderer {
             'show_date'     => true,
             'show_location' => true,
             'cache_minutes' => 15,
-            'date_format'   => get_option('date_format') . ' ' . get_option('time_format'),
+            'date_format'   => get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format'),
         ];
         $p = wp_parse_args($params, $defaults);
 

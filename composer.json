@@ -14,9 +14,7 @@
     "composer/installers": "^2.0"
   },
   "require-dev": {
-    "php-stubs/wordpress-stubs": "^6.5",
-    "johnpbloch/wordpress": "^6.5"
-
+    "php-stubs/wordpress-stubs": "^6.5"
   },
   "autoload": {
     "psr-4": {
@@ -29,7 +27,7 @@
   "config": {
     "allow-plugins": {
       "composer/installers": true,
-      "johnpbloch/wordpress-core-installer": true
+      "johnpbloch/wordpress-core-installer": false
     }
   }
 }
