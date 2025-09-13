@@ -111,13 +111,13 @@ class EJW_Plugin {
             <pre>{
   "events": [
     {
-      "title": "Concerto di prova",
-      "start_date": "2025-09-15T21:00:00+02:00",
-      "end_date": "2025-09-15T23:00:00+02:00",
-      "url": "https://esempio.it/evento",
+      "title": "Live concert title",
+      "start_date": "2025-09-15",
+      "end_date": "2025-09-15",
+      "url": "https://iltaccodibacco.it/evento",
       "location": "Teatro Comunale, Bari",
       "image": "https://esempio.it/img.jpg",
-      "description": "Testo descrizione"
+      "description": "Descripttion"
     }
   ]
 }</pre>
