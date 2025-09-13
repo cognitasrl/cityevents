@@ -1,0 +1,35 @@
+{
+  "name": "tdb/cityevents-widget",
+  "description": "Plugin WordPress che mostra eventi da feed JSON in un widget e shortcode.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Cognita Srl",
+      "email": "info@gerp.it"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "composer/installers": "^2.0"
+  },
+  "require-dev": {
+    "php-stubs/wordpress-stubs": "^6.5",
+    "johnpbloch/wordpress": "^6.5"
+
+  },
+  "autoload": {
+    "psr-4": {
+      "EJW\\": "src/"
+    }
+  },
+  "extra": {
+    "installer-name": "cityevents-widget"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "johnpbloch/wordpress-core-installer": true
+    }
+  }
+}
