@@ -267,13 +267,14 @@ class EJW_Renderer {
             return self::output($html, $return_html);
         }
 
+        /*
         // Ordina per data di inizio se presente
         usort($events, function($a, $b) {
             $ta = isset($a['start_date']) ? strtotime($a['start_date']) : PHP_INT_MAX;
             $tb = isset($b['start_date']) ? strtotime($b['start_date']) : PHP_INT_MAX;
             if ($ta == $tb) { return 0; }
             return ($ta < $tb) ? -1 : 1;
-        });
+        });*/
 
         $events = array_slice($events, 0, max(1, intval($p['limit'])));
 
@@ -284,7 +285,7 @@ class EJW_Renderer {
             $start_raw = $ev['start_date'] ?? '';
             $location  = isset($ev['location']) ? wp_strip_all_tags($ev['location']) : '';
             $image     = isset($ev['image']) ? esc_url($ev['image']) : '';
-            $dt        = $start_raw ? strtotime($start_raw) : false;
+           // $dt        = $start_raw ? strtotime($start_raw) : false;
 
             $html .= '<li class="ejw-event" itemprop="event" itemscope itemtype="https://schema.org/Event">';
             if ($image) {
@@ -300,7 +301,7 @@ class EJW_Renderer {
             if ($p['show_date'] && $dt) {
                 $html .= '<div class="ejw-event-date"><time itemprop="startDate" datetime="' . esc_attr(gmdate('c', $dt)) . '">'
                     . esc_html(wp_date($p['date_format'], $dt)) . '</time></div>';
-            }
+             }
 
             if ($p['show_location'] && $location) {
                 $html .= '<div class="ejw-event-location" itemprop="location" itemscope itemtype="https://schema.org/Place">'
@@ -383,8 +384,8 @@ class EJW_Renderer {
             if (!is_array($it)) { continue; }
             $ev = [
                 'title'       => self::pick($it, ['title','name','nome_evento']),
-                'start_date'  => self::pick($it, ['start_date','start','date','datetime','data_evento']),
-                'end_date'    => self::pick($it, ['end_date','end','data_evento']),
+                'start_date'  => self::pick($it, ['start_date','start','date','datetime','startDate']),
+                'end_date'    => self::pick($it, ['end_date','end','endDate']),
                 'url'         => self::pick($it, ['url','link','url_evento']),
                 'location'    => self::pick($it, ['location','des_locale','venue','place']),
                 'image'       => self::pick($it, ['image','cover','img']),
