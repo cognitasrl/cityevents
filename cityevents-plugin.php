@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: CityEvents JSON Widget
+ * Plugin Name: CityEvents Widget
  * Description: Recupera eventi da un URL JSON e li mostra in un widget o tramite shortcode.
- * Version: 1.0.0
- * Author: ChatGPT
+ * Version: 0.1.1
+ * Author: Cognita.it
  * License: GPLv2 or later
- * Text Domain: events-json-widget
+ * Text Domain: cityevents
  */
 
 if (!defined('ABSPATH')) { exit; }
