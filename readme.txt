@@ -1,33 +1,34 @@
-=== CityEvents Widget – Pubblica l'agenda eventi culturali del tuo comune ===
-Contributors: cognita, taccodibacco
-Tags: eventi, cultura, concerti, festival, sagre, calendario, agenda
+=== CityEvents Widget – Publish italy cultural events on your website ===
+Contributors: cognita, taccodibacco.it
+Tags: events, culture, concerts, festivals, fairs, calendar, agenda, italy, italian
 Requires at least: 5.8
 Tested up to: 6.6
-Stable tag: 0.1.3
+Stable tag: 1.0.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Visualizza sul tuo sito WordPress gli eventi culturali provenienti da iltaccodibacco.it, filtrati per comune e con raggio di 30 km.
+Display cultural events from iltaccodibacco.it on your WordPress site, filtered by city and including events within a 30 km radius.
 
-== Descrizione ==
+== Description ==
 
-CityEvents Widget ti permette di integrare facilmente sul tuo sito WordPress gli eventi culturali da [iltaccodibacco.it](https://www.iltaccodibacco.it), il portale che copre eventi in tutta Italia.
+CityEvents Widget allows you to easily integrate cultural events from [iltaccodibacco.it](https://www.iltaccodibacco.it) into your WordPress site.
+iltaccodibacco.it is a trusted hub that covers events all over Italy, including concerts, theater shows, exhibitions, festivals, fairs, and more.
 
-Puoi scegliere un comune e il plugin mostrerà automaticamente tutti gli eventi nel raggio di 30 km, così i tuoi visitatori avranno sempre una panoramica aggiornata di concerti, spettacoli, mostre, festival e sagre.
+You can select a city, and the plugin will automatically display all events within a 30 km radius, giving your visitors a comprehensive and always up-to-date overview of what's happening in the area.
 
-**Funzionalità principali**
-- Integrazione diretta con l’hub eventi iltaccodibacco.it.
-- Selezione del comune di riferimento.
-- Inclusione automatica degli eventi entro 30 km.
-- Visualizzazione tramite **widget** o **shortcode**.
-- Layout responsive, adatto a desktop, tablet e smartphone.
-- Aggiornamento in tempo reale dei contenuti.
+**Main Features**
+- Direct integration with the iltaccodibacco.it event hub.
+- Select your preferred city.
+- Automatically includes events within a 30 km radius.
+- Display events via **widget** or **shortcode**.
+- Responsive layout for desktop, tablet, and mobile.
+- Content updated in real time.
 
 == Installation ==
 
-1. Carica la cartella del plugin `cityevents-widget` nella directory `/wp-content/plugins/`.
-2. Attiva il plugin dal menu "Plugin" di WordPress.
-3. Vai in **Impostazioni → CityEvents** e seleziona il comune di riferimento.
-4. Aggiungi il **widget CityEvents** alla tua sidebar oppure usa lo shortcode:
+1. Upload the plugin folder `cityevents-widget` to the `/wp-content/plugins/` directory.
+2. Activate the plugin through the “Plugins” menu in WordPress.
+3. Go to **Settings → CityEvents** and choose your reference city.
+4. Add the **CityEvents Widget** to your sidebar or use the shortcode:
 
