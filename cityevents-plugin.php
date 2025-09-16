@@ -98,7 +98,7 @@ class EJW_Plugin {
     public static function settings_page_html() {
         if (!current_user_can('manage_options')) { return; } ?>
         <div class="wrap">
-            <h1><?php echo esc_html__('Events JSON Widget', 'cityevents'); ?></h1>
+            <h1><?php echo esc_html__('Cityevents options', 'cityevents'); ?></h1>
             <form method="post" action="options.php">
                 <?php
                 settings_fields('ejw_settings');
@@ -106,23 +106,6 @@ class EJW_Plugin {
                 submit_button();
                 ?>
             </form>
-            <hr>
-            <h2><?php echo esc_html__('Formato JSON atteso', 'cityevents'); ?></h2>
-            <p><?php echo esc_html__('Il feed deve restituire un array JSON di eventi. Campi consigliati:', 'cityevents'); ?></p>
-            <pre>{
-  "events": [
-    {
-      "title": "Live concert title",
-      "start_date": "2025-09-15",
-      "end_date": "2025-09-15",
-      "url": "https://iltaccodibacco.it/evento",
-      "location": "Teatro Comunale, Bari",
-      "image": "https://esempio.it/img.jpg",
-      "description": "Descripttion"
-    }
-  ]
-}</pre>
-            <p><?php echo esc_html__('Sono accettati anche JSON come semplice array (senza chiave "events").', 'cityevents'); ?></p>
         </div>
     <?php }
 }
