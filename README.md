@@ -198,5 +198,5 @@ This plugin is released under the **GPL-2.0-or-later** license.
 
 ## Credits
 
-- Events data powered by **iltaccodibacco.it**
-- Built by **Cognita Srl**
+- Events data powered by  [iltaccodibacco.it](https://iltaccodibacco.it/).
+- Built by [cognita srl](https://cognita.it/).
