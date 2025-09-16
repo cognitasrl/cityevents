@@ -1,6 +1,6 @@
 # CityEvents Widget
 
-Display cultural events from **[iltaccodibacco.it](https://www.iltaccodibacco.it/)** on your WordPress site.  
+Display cultural events from **[iltaccodibacco.it](https://iltaccodibacco.it/)** on your WordPress site.  
 Pick a city in the plugin settings and the widget/shortcode will show events in that city **plus everything within a 30 km radius**.
 
 > **Why this plugin?**  
