@@ -2,7 +2,7 @@
 /**
  * Plugin Name: cityevents
  * Description: CityEvents – Pubblica agenda eventi culturali del tuo comune
- * Version: 0.1.3
+ * Version: 0.1.4
  * Author: Cognita.it
  * License: GPLv2 or later
  * Text Domain: cityevents
@@ -29,11 +29,11 @@ class EJW_Plugin {
         });*/
     }
 
-    /** Shortcode: [events_widget feed_url="https://..." limit="5" title="Prossimi eventi"] */
+    /** Shortcode: [cityevents city="city_slug" limit="5" title="Prossimi eventi"] */
     public static function shortcode($atts = [], $content = null) {
         $atts = shortcode_atts([
             'title'         => '',
-            'feed_url'      => get_option('ejw_default_feed_url', ''),
+            'city'      => get_option('ejw_default_city', ''),
             'limit'         => get_option('ejw_default_limit', 5),
             'show_date'     => 1,
             'show_location' => 1,
@@ -43,7 +43,7 @@ class EJW_Plugin {
 
         $args = [
             'title'         => sanitize_text_field($atts['title']),
-            'feed_url'      => esc_url_raw($atts['feed_url']),
+            'city'          => esc_url_raw($atts['city']),
             'limit'         => intval($atts['limit']),
             'show_date'     => intval($atts['show_date']) ? true : false,
             'show_location' => intval($atts['show_location']) ? true : false,
@@ -66,7 +66,7 @@ class EJW_Plugin {
     }
 
     public static function register_settings() {
-        register_setting('ejw_settings', 'ejw_default_feed_url', ['type' => 'string', 'sanitize_callback' => 'esc_url_raw', 'default' => 'https://iltaccodibacco.it/roma/events.json']);
+        register_setting('ejw_settings', 'ejw_default_city', ['type' => 'string', 'sanitize_callback' => 'esc_url_raw', 'default' => 'roma']);
         register_setting('ejw_settings', 'ejw_default_limit', ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 10]);
         register_setting('ejw_settings', 'ejw_default_cache_minutes', ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 15]);
         register_setting('ejw_settings', 'ejw_default_date_format', ['type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => get_option('date_format') ]);
@@ -75,9 +75,9 @@ class EJW_Plugin {
             echo '<p>' . esc_html__('Questi valori sono usati come default per widget e shortcode (possono essere sovrascritti).', 'cityevents') . '</p>';
         }, 'ejw-settings');
 
-        add_settings_field('ejw_default_feed_url', __('URL JSON predefinito', 'cityevents'), function () {
-            printf('<input type="url" class="regular-text" name="ejw_default_feed_url" value="%s" placeholder="https://example.com/events.json"/>',
-                esc_attr(get_option('ejw_default_feed_url', '')));
+        add_settings_field('ejw_default_city', __('Citta predefinita', 'cityevents'), function () {
+            printf('<input type="url" class="regular-text" name="ejw_default_city" value="%s" placeholder="roma"/>',
+                esc_attr(get_option('ejw_default_city', '')));
         }, 'ejw-settings', 'ejw_main');
 
         add_settings_field('ejw_default_limit', __('Numero eventi', 'cityevents'), function () {
@@ -123,8 +123,8 @@ class EJW_Widget extends WP_Widget {
     public function form($instance) {
         $defaults = [
             'title'         => '',
-            'feed_url'      => get_option('ejw_default_feed_url', ''),
-            'limit'         => get_option('ejw_default_limit', 5),
+            'city'      => get_option('ejw_default_city', 'roma'),
+            'limit'         => get_option('ejw_default_limit', 10),
             'show_date'     => 1,
             'show_location' => 1,
             'cache_minutes' => get_option('ejw_default_cache_minutes', 15),
@@ -134,7 +134,7 @@ class EJW_Widget extends WP_Widget {
 
         $fields = [
             'title'         => ['label' => __('Titolo', 'cityevents'), 'type' => 'text'],
-            'feed_url'      => ['label' => __('URL JSON', 'cityevents'), 'type' => 'url'],
+            'city'      => ['label' => __('City slug', 'cityevents'), 'type' => 'url'],
             'limit'         => ['label' => __('Numero eventi', 'cityevents'), 'type' => 'number', 'min' => 1],
             'cache_minutes' => ['label' => __('Cache (minuti)', 'cityevents'), 'type' => 'number', 'min' => 1],
             'date_format'   => ['label' => __('Formato data', 'cityevents'), 'type' => 'text'],
@@ -147,10 +147,10 @@ class EJW_Widget extends WP_Widget {
                    value="<?php echo esc_attr($instance['title']); ?>">
         </p>
         <p>
-            <label for="<?php echo esc_attr($this->get_field_id('feed_url')); ?>"><?php echo esc_html($fields['feed_url']['label']); ?></label>
-            <input class="widefat" id="<?php echo esc_attr($this->get_field_id('feed_url')); ?>"
-                   name="<?php echo esc_attr($this->get_field_name('feed_url')); ?>" type="url"
-                   value="<?php echo esc_attr($instance['feed_url']); ?>" placeholder="https://example.com/events.json">
+            <label for="<?php echo esc_attr($this->get_field_id('city')); ?>"><?php echo esc_html($fields['city']['label']); ?></label>
+            <input class="widefat" id="<?php echo esc_attr($this->get_field_id('city')); ?>"
+                   name="<?php echo esc_attr($this->get_field_name('city')); ?>" type="url"
+                   value="<?php echo esc_attr($instance['city']); ?>" placeholder="roma">
         </p>
         <p>
             <label for="<?php echo esc_attr($this->get_field_id('limit')); ?>"><?php echo esc_html($fields['limit']['label']); ?></label>
@@ -188,7 +188,7 @@ class EJW_Widget extends WP_Widget {
     public function update($new_instance, $old_instance) {
         $instance = [];
         $instance['title']         = sanitize_text_field($new_instance['title'] ?? '');
-        $instance['feed_url']      = esc_url_raw($new_instance['feed_url'] ?? '');
+        $instance['city']      = esc_url_raw($new_instance['city'] ?? '');
         $instance['limit']         = max(1, absint($new_instance['limit'] ?? 5));
         $instance['show_date']     = !empty($new_instance['show_date']) ? 1 : 0;
         $instance['show_location'] = !empty($new_instance['show_location']) ? 1 : 0;
@@ -200,8 +200,8 @@ class EJW_Widget extends WP_Widget {
     public function widget($args, $instance) {
         $params = [
             'title'         => $instance['title'] ?? '',
-            'feed_url'      => $instance['feed_url'] ?? '',
-            'limit'         => intval($instance['limit'] ?? 5),
+            'city'      => $instance['city'] ?? 'roma',
+            'limit'         => intval($instance['limit'] ?? 10),
             'show_date'     => !empty($instance['show_date']),
             'show_location' => !empty($instance['show_location']),
             'cache_minutes' => intval($instance['cache_minutes'] ?? 15),
@@ -226,8 +226,8 @@ class EJW_Renderer {
      */
     public static function render($params, $return_html = false) {
         $defaults = [
-            'feed_url'      => '',
-            'limit'         => 5,
+            'city'      => 'roma',
+            'limit'         => 10,
             'show_date'     => true,
             'show_location' => true,
             'cache_minutes' => 15,
@@ -237,12 +237,7 @@ class EJW_Renderer {
 
         $html = '';
 
-        if (empty($p['feed_url'])) {
-            $html .= '<p>' . esc_html__('Nessun URL del feed specificato.', 'cityevents') . '</p>';
-            return self::output($html, $return_html);
-        }
-
-        $events = self::fetch_events($p['feed_url'], $p['cache_minutes']);
+        $events = self::fetch_events($p['city'], $p['cache_minutes']);
 
         if (is_wp_error($events)) {
             $html .= '<p>' . esc_html__('Errore nel recupero del feed:', 'cityevents') . ' ' . esc_html($events->get_error_message()) . '</p>';
@@ -323,12 +318,15 @@ class EJW_Renderer {
     }
 
     /** Recupera eventi dal feed con caching. */
-    protected static function fetch_events($url, $cache_minutes = 15) {
-        $cache_key = 'ejw_' . md5('feed:' . $url);
+    protected static function fetch_events($city_slug, $cache_minutes = 15) {
+
+        $cache_key = 'ejw_' . md5('feed:' . $city_slug);
         $cached = get_transient($cache_key);
         if ($cached !== false) {
             return $cached;
         }
+
+        $url = 'https://iltaccodibacco.it/'.$city_slug.'/events.json';
 
         $resp = wp_remote_get($url, [
             'timeout' => 10,
