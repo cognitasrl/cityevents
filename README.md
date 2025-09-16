@@ -8,6 +8,8 @@ Pick a city in the plugin settings and the widget/shortcode will show events in 
 
 ---
 
+## Demo
+Visit [the-best.net/cultural-events-in-rome-italy/](https://the-best.net/cultural-events-in-rome-italy/)
 ## Features
 
 - Direct integration with the iltaccodibacco.it events hub
