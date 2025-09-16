@@ -16,7 +16,7 @@ class EJW_Plugin {
     public static function init() {
         // Widget & shortcode
         add_action('widgets_init', function () { register_widget('EJW_Widget'); });
-        add_shortcode('events_widget', [__CLASS__, 'shortcode']);
+        add_shortcode('cityevents', [__CLASS__, 'shortcode']);
 
         // Settings page (facoltativa, utile per default globali)
         add_action('admin_menu', [__CLASS__, 'add_settings_page']);
@@ -33,17 +33,17 @@ class EJW_Plugin {
     public static function shortcode($atts = [], $content = null) {
         $atts = shortcode_atts([
             'title'         => '',
-            'city'      => get_option('ejw_default_city', ''),
+            'city'      => get_option('ejw_default_city', 'roma'),
             'limit'         => get_option('ejw_default_limit', 5),
             'show_date'     => 1,
             'show_location' => 1,
             'cache_minutes' => get_option('ejw_default_cache_minutes', 15),
             'date_format'   => get_option('ejw_default_date_format', get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')),
-        ], $atts, 'events_widget');
+        ], $atts, 'cityevents');
 
         $args = [
             'title'         => sanitize_text_field($atts['title']),
-            'city'          => esc_url_raw($atts['city']),
+            'city'          => sanitize_text_field($atts['city']),
             'limit'         => intval($atts['limit']),
             'show_date'     => intval($atts['show_date']) ? true : false,
             'show_location' => intval($atts['show_location']) ? true : false,
@@ -66,7 +66,7 @@ class EJW_Plugin {
     }
 
     public static function register_settings() {
-        register_setting('ejw_settings', 'ejw_default_city', ['type' => 'string', 'sanitize_callback' => 'esc_url_raw', 'default' => 'roma']);
+        register_setting('ejw_settings', 'ejw_default_city', ['type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => 'roma']);
         register_setting('ejw_settings', 'ejw_default_limit', ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 10]);
         register_setting('ejw_settings', 'ejw_default_cache_minutes', ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 15]);
         register_setting('ejw_settings', 'ejw_default_date_format', ['type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => get_option('date_format') ]);
@@ -76,7 +76,7 @@ class EJW_Plugin {
         }, 'ejw-settings');
 
         add_settings_field('ejw_default_city', __('Citta predefinita', 'cityevents'), function () {
-            printf('<input type="url" class="regular-text" name="ejw_default_city" value="%s" placeholder="roma"/>',
+            printf('<input type="text" class="regular-text" name="ejw_default_city" value="%s" placeholder="roma"/>',
                 esc_attr(get_option('ejw_default_city', '')));
         }, 'ejw-settings', 'ejw_main');
 
@@ -340,7 +340,7 @@ class EJW_Renderer {
         $code = wp_remote_retrieve_response_code($resp);
         if ($code < 200 || $code >= 300) {
             /* translators: %d = error http  */
-            return new WP_Error('ejw_http_error', sprintf(__('HTTP %d dal feed', 'cityevents'), $code));
+            return new WP_Error('ejw_http_error', sprintf(__('HTTP %d dal feed'.$url, 'cityevents'), $code));
         }
 
         $body = wp_remote_retrieve_body($resp);
