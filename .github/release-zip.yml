@@ -1,0 +1,67 @@
+name: Build & Release Plugin ZIP
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+  release:
+    types: [published]
+
+env:
+  PLUGIN_SLUG: cityevents-widget
+
+jobs:
+  build-zip:
+    name: Build ZIP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine version from tag
+        run: |
+          echo "TAG_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+          # Strip leading 'v' if present (v1.2.3 -> 1.2.3)
+          CLEAN_TAG="${{ github.ref_name }}"
+          if [[ "$CLEAN_TAG" == v* ]]; then
+            CLEAN_TAG="${CLEAN_TAG#v}"
+          fi
+          echo "CLEAN_TAG=$CLEAN_TAG" >> $GITHUB_ENV
+
+      - name: Setup PHP (for Composer, optional)
+        if: hashFiles('**/composer.json') != ''
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+          tools: composer
+
+      - name: Install PHP dependencies (no-dev, optimized) — optional
+        if: hashFiles('**/composer.json') != ''
+        run: |
+          composer install --no-dev --prefer-dist --optimize-autoloader
+        shell: bash
+
+      - name: Prepare dist directory
+        run: |
+          mkdir -p dist/${{ env.PLUGIN_SLUG }}
+          rsync -av --delete             --exclude='.git*'             --exclude='.github'             --exclude='.vscode'             --exclude='.idea'             --exclude='node_modules'             --exclude='tests'             --exclude='Test'             --exclude='phpcs.xml*'             --exclude='phpstan.*'             --exclude='composer.lock'             --exclude='package*.json'             --exclude='webpack*'             --exclude='*.map'             --exclude='.distignore'             --exclude='.editorconfig'             --exclude='.DS_Store'             ./ dist/${{ env.PLUGIN_SLUG }}/
+        shell: bash
+
+      - name: Create ZIP
+        run: |
+          cd dist
+          zip -r "${{ env.PLUGIN_SLUG }}-${{ env.CLEAN_TAG }}.zip" "${{ env.PLUGIN_SLUG }}"
+          ls -lh
+        shell: bash
+
+      - name: Upload ZIP as GitHub Release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/${{ env.PLUGIN_SLUG }}-${{ env.CLEAN_TAG }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
