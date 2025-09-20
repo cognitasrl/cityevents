@@ -2,7 +2,7 @@
 /**
  * Plugin Name: cityevents
  * Description: CityEvents – Pubblica agenda eventi culturali del tuo comune
- * Version: 0.1.4
+ * Version: 0.1.5
  * Author: Cognita.it
  * License: GPLv2 or later
  * Text Domain: cityevents
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) { exit; }
 class CityEvents_Plugin {
     const TD = 'cityevents';
 
-    const VERSION = '0.1.4';
+    const VERSION = '0.1.5';
 
 
     public static $url;
@@ -48,6 +48,10 @@ class CityEvents_Plugin {
 
     /** Shortcode: [cityevents city="city_slug" limit="5" title="Prossimi eventi"] */
     public static function shortcode($atts = [], $content = null) {
+        if ( ! wp_style_is( 'cityevents-frontend', 'enqueued' ) ) {
+            wp_enqueue_style( 'cityevents-frontend' );
+        }
+
         $atts = shortcode_atts([
             'title'         => '',
             'city'      => get_option('cityevents_default_city', 'roma'),
@@ -225,6 +229,11 @@ class CityEvents_Widget extends WP_Widget {
             'date_format'   => $instance['date_format'] ?? (get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')),
         ];
         echo ($args['before_widget']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Theme-provided HTML wrapper
+
+        if ( ! wp_style_is( 'cityevents-frontend', 'enqueued' ) ) {
+            wp_enqueue_style( 'cityevents-frontend' );
+        }
+
         if (!empty($params['title'])) {
             echo $args['before_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Theme-provided HTML wrapper
             echo esc_html($params['title']);
@@ -344,7 +353,7 @@ class CityEvents_Renderer {
         $code = wp_remote_retrieve_response_code($resp);
         if ($code < 200 || $code >= 300) {
             /* translators: %d = error http  */
-            return new WP_Error('cityevents_http_error', sprintf(__('HTTP %d dal feed'.$url, 'cityevents'), $code));
+            return new WP_Error('cityevents_http_error', sprintf(__('HTTP %d dal feed', 'cityevents'), $code));
         }
 
         $body = wp_remote_retrieve_body($resp);
