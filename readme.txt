@@ -1,5 +1,5 @@
 === cityevents ===
-Contributors: cognita, taccodibacco.it
+Contributors: cognitasrl
 Tags: events, culture, italy, agenda, concerts
 Requires at least: 5.8
 Tested up to: 6.8
@@ -32,3 +32,31 @@ You can select a city, and the plugin will automatically display all events with
 3. Go to **Settings → CityEvents** and choose your reference city.
 4. Add the **CityEvents Widget** to your sidebar or use the shortcode:
 
+== External Service & Remote Requests ==
+
+This plugin connects to ONE external service only:
+
+- Service name: iltaccodibacco.it (events hub for Italy)
+- Domain: https://iltaccodibacco.it
+- Purpose: fetch public cultural events to display on your site
+- Endpoint pattern (GET, HTTPS):
+  https://iltaccodibacco.it/{city-slug}/events.json
+  (e.g., https://iltaccodibacco.it/roma/events.json)
+
+When requests happen:
+- On frontend when the widget/shortcode renders (and optionally in admin previews).
+- Results are cached to reduce calls.
+
+What is sent:
+- Standard HTTP request from your server to iltaccodibacco.it over HTTPS.
+- No personal data from your visitors is sent by this plugin.
+- As with any outgoing request, the remote server sees your server’s IP and basic HTTP metadata.
+
+What is stored:
+- The remote response is cached in WordPress (transients/options) for the configured TTL (`cache_minutes`, default 15 minutes). No personal data is stored.
+
+How to disable:
+- Remove the widget and/or the shortcode, or deactivate the plugin.
+
+Notes:
+- If the remote service is unavailable or returns an error, the plugin fails gracefully and shows a generic message.

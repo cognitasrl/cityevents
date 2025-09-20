@@ -10,13 +10,30 @@
 
 if (!defined('ABSPATH')) { exit; }
 
-class EJW_Plugin {
+class CityEvents_Plugin {
     const TD = 'cityevents';
+
+    const VERSION = '0.1.4';
+
+
+    public static $url;
+
 
     public static function init() {
         // Widget & shortcode
-        add_action('widgets_init', function () { register_widget('EJW_Widget'); });
+        add_action('widgets_init', function () { register_widget('CityEvents_Widget'); });
         add_shortcode('cityevents', [__CLASS__, 'shortcode']);
+
+        self::$url  = plugin_dir_url( __FILE__ );
+
+        wp_register_style(
+            'cityevents-frontend',
+            self::$url . 'assets/css/cityevents.css',
+            [],
+            self::VERSION
+        );
+
+
 
         // Settings page (facoltativa, utile per default globali)
         add_action('admin_menu', [__CLASS__, 'add_settings_page']);
@@ -33,12 +50,12 @@ class EJW_Plugin {
     public static function shortcode($atts = [], $content = null) {
         $atts = shortcode_atts([
             'title'         => '',
-            'city'      => get_option('ejw_default_city', 'roma'),
-            'limit'         => get_option('ejw_default_limit', 5),
+            'city'      => get_option('cityevents_default_city', 'roma'),
+            'limit'         => get_option('cityevents_default_limit', 5),
             'show_date'     => 1,
             'show_location' => 1,
-            'cache_minutes' => get_option('ejw_default_cache_minutes', 15),
-            'date_format'   => get_option('ejw_default_date_format', get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')),
+            'cache_minutes' => get_option('cityevents_default_cache_minutes', 15),
+            'date_format'   => get_option('cityevents_default_date_format', get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')),
         ], $atts, 'cityevents');
 
         $args = [
@@ -51,7 +68,7 @@ class EJW_Plugin {
             'date_format'   => sanitize_text_field($atts['date_format']),
         ];
 
-        return EJW_Renderer::render($args, true);
+        return CityEvents_Renderer::render($args, true);
     }
 
     // === Settings page (opzionale) ===
@@ -60,39 +77,39 @@ class EJW_Plugin {
             __('CityEvents', 'cityevents'),
             __('CityEvents', 'cityevents'),
             'manage_options',
-            'ejw-settings',
+            'cityevents-settings',
             [__CLASS__, 'settings_page_html']
         );
     }
 
     public static function register_settings() {
-        register_setting('ejw_settings', 'ejw_default_city', ['type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => 'roma']);
-        register_setting('ejw_settings', 'ejw_default_limit', ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 10]);
-        register_setting('ejw_settings', 'ejw_default_cache_minutes', ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 15]);
-        register_setting('ejw_settings', 'ejw_default_date_format', ['type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => get_option('date_format') ]);
+        register_setting('cityevents_settings', 'cityevents_default_city', ['type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => 'roma']);
+        register_setting('cityevents_settings', 'cityevents_default_limit', ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 10]);
+        register_setting('cityevents_settings', 'cityevents_default_cache_minutes', ['type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 15]);
+        register_setting('cityevents_settings', 'cityevents_default_date_format', ['type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => get_option('date_format') ]);
 
-        add_settings_section('ejw_main', __('Impostazioni predefinite', 'cityevents'), function () {
+        add_settings_section('cityevents_main', __('Impostazioni predefinite', 'cityevents'), function () {
             echo '<p>' . esc_html__('Questi valori sono usati come default per widget e shortcode (possono essere sovrascritti).', 'cityevents') . '</p>';
-        }, 'ejw-settings');
+        }, 'cityevents-settings');
 
-        add_settings_field('ejw_default_city', __('Citta predefinita', 'cityevents'), function () {
-            printf('<input type="text" class="regular-text" name="ejw_default_city" value="%s" placeholder="roma"/>',
-                esc_attr(get_option('ejw_default_city', '')));
-        }, 'ejw-settings', 'ejw_main');
+        add_settings_field('cityevents_default_city', __('Citta predefinita', 'cityevents'), function () {
+            printf('<input type="text" class="regular-text" name="cityevents_default_city" value="%s" placeholder="roma"/>',
+                esc_attr(get_option('cityevents_default_city', '')));
+        }, 'cityevents-settings', 'cityevents_main');
 
-        add_settings_field('ejw_default_limit', __('Numero eventi', 'cityevents'), function () {
-            printf('<input type="number" min="1" name="ejw_default_limit" value="%d" />', intval(get_option('ejw_default_limit', 5)));
-        }, 'ejw-settings', 'ejw_main');
+        add_settings_field('cityevents_default_limit', __('Numero eventi', 'cityevents'), function () {
+            printf('<input type="number" min="1" name="cityevents_default_limit" value="%d" />', intval(get_option('cityevents_default_limit', 5)));
+        }, 'cityevents-settings', 'cityevents_main');
 
-        add_settings_field('ejw_default_cache_minutes', __('Cache (minuti)', 'cityevents'), function () {
-            printf('<input type="number" min="1" name="ejw_default_cache_minutes" value="%d" />', intval(get_option('ejw_default_cache_minutes', 15)));
-        }, 'ejw-settings', 'ejw_main');
+        add_settings_field('cityevents_default_cache_minutes', __('Cache (minuti)', 'cityevents'), function () {
+            printf('<input type="number" min="1" name="cityevents_default_cache_minutes" value="%d" />', intval(get_option('cityevents_default_cache_minutes', 15)));
+        }, 'cityevents-settings', 'cityevents_main');
 
-        add_settings_field('ejw_default_date_format', __('Formato data', 'cityevents'), function () {
-            printf('<input type="text" class="regular-text" name="ejw_default_date_format" value="%s" placeholder="Y-m-d H:i" />',
-                esc_attr(get_option('ejw_default_date_format', get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format'))));
+        add_settings_field('cityevents_default_date_format', __('Formato data', 'cityevents'), function () {
+            printf('<input type="text" class="regular-text" name="cityevents_default_date_format" value="%s" placeholder="Y-m-d H:i" />',
+                esc_attr(get_option('cityevents_default_date_format', get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format'))));
             echo '<p class="description">' . esc_html__('Usa i formati di wp_date(), es. "d/m/Y H:i".', 'cityevents') . '</p>';
-        }, 'ejw-settings', 'ejw_main');
+        }, 'cityevents-settings', 'cityevents_main');
     }
 
     public static function settings_page_html() {
@@ -101,20 +118,20 @@ class EJW_Plugin {
             <h1><?php echo esc_html__('Cityevents options', 'cityevents'); ?></h1>
             <form method="post" action="options.php">
                 <?php
-                settings_fields('ejw_settings');
-                do_settings_sections('ejw-settings');
+                settings_fields('cityevents_settings');
+                do_settings_sections('cityevents-settings');
                 submit_button();
                 ?>
             </form>
         </div>
     <?php }
 }
-EJW_Plugin::init();
+CityEvents_Plugin::init();
 
-class EJW_Widget extends WP_Widget {
+class CityEvents_Widget extends WP_Widget {
     public function __construct() {
         parent::__construct(
-            'ejw_widget',
+            'CityEvents_Widget',
             __('Cityevents', 'cityevents'),
             ['description' => __('Display italy cultural events', 'cityevents')]
         );
@@ -123,12 +140,12 @@ class EJW_Widget extends WP_Widget {
     public function form($instance) {
         $defaults = [
             'title'         => '',
-            'city'      => get_option('ejw_default_city', 'roma'),
-            'limit'         => get_option('ejw_default_limit', 10),
+            'city'      => get_option('cityevents_default_city', 'roma'),
+            'limit'         => get_option('cityevents_default_limit', 10),
             'show_date'     => 1,
             'show_location' => 1,
-            'cache_minutes' => get_option('ejw_default_cache_minutes', 15),
-            'date_format'   => get_option('ejw_default_date_format', get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')),
+            'cache_minutes' => get_option('cityevents_default_cache_minutes', 15),
+            'date_format'   => get_option('cityevents_default_date_format', get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')),
         ];
         $instance = wp_parse_args((array) $instance, $defaults);
 
@@ -213,13 +230,13 @@ class EJW_Widget extends WP_Widget {
             echo esc_html($params['title']);
             echo $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Theme-provided HTML wrapper
         }
-        echo wp_kses_post(EJW_Renderer::render($params, true));
+        echo wp_kses_post(CityEvents_Renderer::render($params, true));
         echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Theme-provided HTML wrapper
 
     }
 }
 
-class EJW_Renderer {
+class CityEvents_Renderer {
     /**
      * Recupera, normalizza e renderizza gli eventi.
      * $return_html: se true ritorna stringa HTML; altrimenti echo.
@@ -260,7 +277,7 @@ class EJW_Renderer {
 
         $events = array_slice($events, 0, max(1, intval($p['limit'])));
 
-        $html .= '<ul class="ejw-events-list" itemscope itemtype="https://schema.org/Event">';
+        $html .= '<ul class="cityevents-events-list" itemscope itemtype="https://schema.org/Event">';
         foreach ($events as $ev) {
             $title     = isset($ev['title']) ? wp_strip_all_tags($ev['title']) : '';
             $url       = isset($ev['url']) ? esc_url($ev['url']) : '';
@@ -269,50 +286,37 @@ class EJW_Renderer {
             $image     = isset($ev['image']) ? esc_url($ev['image']) : '';
             $dt        = $start_raw ? strtotime($start_raw) : false;
 
-            $html .= '<li class="ejw-event" itemprop="event" itemscope itemtype="https://schema.org/Event">';
+            $html .= '<li class="cityevents-event" itemprop="event" itemscope itemtype="https://schema.org/Event">';
             if ($image) {
-                $html .= '<div class="ejw-event-thumb"><img loading="lazy" src="' . $image . '" alt="' . esc_attr($title) . '" itemprop="image"></div>';
+                $html .= '<div class="cityevents-event-thumb"><img loading="lazy" src="' . $image . '" alt="' . esc_attr($title) . '" itemprop="image"></div>';
             }
-            $html .= '<div class="ejw-event-body">';
+            $html .= '<div class="cityevents-event-body">';
             if ($url) {
-                $html .= '<a class="ejw-event-title" href="' . $url . '" target="_blank" rel="noopener" itemprop="url"><span itemprop="name">' . ($title) . '</span></a>';
+                $html .= '<a class="cityevents-event-title" href="' . $url . '" target="_blank" rel="noopener" itemprop="url"><span itemprop="name">' . ($title) . '</span></a>';
             } else {
-                $html .= '<span class="ejw-event-title" itemprop="name">' . ($title) . '</span>';
+                $html .= '<span class="cityevents-event-title" itemprop="name">' . ($title) . '</span>';
             }
 
             if ($p['show_date'] && $dt) {
-                $html .= '<div class="ejw-event-date"><time itemprop="startDate" datetime="' . esc_attr(gmdate('c', $dt)) . '">'
+                $html .= '<div class="cityevents-event-date"><time itemprop="startDate" datetime="' . esc_attr(gmdate('c', $dt)) . '">'
                     . esc_html(wp_date($p['date_format'], $dt)) . '</time></div>';
              }
 
-            /*
-                $html .= '<div class="ejw-event-date">'
-                    . esc_html($ev['start_date']) . '</div>';*/
 
             if ($p['show_location'] && $location) {
-                $html .= '<div class="ejw-event-location" itemprop="location" itemscope itemtype="https://schema.org/Place">'
+                $html .= '<div class="cityevents-event-location" itemprop="location" itemscope itemtype="https://schema.org/Place">'
                     . '<span itemprop="name">' . esc_html($location) . '</span></div>';
             }
 
             // opzionale: breve descrizione
             if (!empty($ev['description'])) {
                 $desc = wp_kses_post(wp_trim_words(wp_strip_all_tags($ev['description']), 30, '…'));
-                $html .= '<div class="ejw-event-desc" itemprop="description">' . $desc . '</div>';
+                $html .= '<div class="cityevents-event-desc" itemprop="description">' . $desc . '</div>';
             }
 
             $html .= '</div></li>';
         }
         $html .= '</ul>';
-
-        // Stili base minimi
-        $html .= '<style>
-            .ejw-events-list{list-style:none;margin:0;padding:0}
-            .ejw-event{display:flex;gap:12px;margin:0 0 12px 0}
-            .ejw-event-thumb img{width:72px;height:72px;object-fit:cover;border-radius:8px}
-            .ejw-event-title{font-weight:600;display:block;margin-bottom:2px;text-decoration:none}
-            .ejw-event-date,.ejw-event-location{font-size:0.9em;opacity:0.8}
-            .ejw-event-desc{margin-top:4px;font-size:0.95em}
-        </style>';
 
         return self::output($html, $return_html);
     }
@@ -320,7 +324,7 @@ class EJW_Renderer {
     /** Recupera eventi dal feed con caching. */
     protected static function fetch_events($city_slug, $cache_minutes = 15) {
 
-        $cache_key = 'ejw_' . md5('feed:' . $city_slug);
+        $cache_key = 'cityevents_' . md5('feed:' . $city_slug);
         $cached = get_transient($cache_key);
         if ($cached !== false) {
             return $cached;
@@ -340,14 +344,14 @@ class EJW_Renderer {
         $code = wp_remote_retrieve_response_code($resp);
         if ($code < 200 || $code >= 300) {
             /* translators: %d = error http  */
-            return new WP_Error('ejw_http_error', sprintf(__('HTTP %d dal feed'.$url, 'cityevents'), $code));
+            return new WP_Error('cityevents_http_error', sprintf(__('HTTP %d dal feed'.$url, 'cityevents'), $code));
         }
 
         $body = wp_remote_retrieve_body($resp);
         $json = json_decode($body, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            return new WP_Error('ejw_json_error', __('JSON non valido', 'cityevents'));
+            return new WP_Error('cityevents_json_error', __('JSON non valido', 'cityevents'));
         }
 
         // Supporta { "events": [ ... ] } o [ ... ]
