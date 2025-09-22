@@ -1,6 +1,6 @@
-.cityevents-events-list{list-style:none;margin:0;padding:0}
-.cityevents-event{display:flex;gap:12px;margin:0 0 12px 0}
-.cityevents-event-thumb img{width:72px;height:72px;object-fit:cover;border-radius:8px}
+.cityevents-events-list{list-style:none;margin:0;padding:0;}
+.cityevents-event{display:flex;gap:12px;margin:0 0 12px 0;  border-bottom: 1px solid #CCC; padding-bottom:30px; padding-top: 30px;}
+.cityevents-event-thumb img{width:200px;height:200px;object-fit:cover;border-radius:8px; margin-right: 20px;}
 .cityevents-event-title{font-weight:600;display:block;margin-bottom:2px;text-decoration:none}
 .cityevents-event-date,.cityevents-event-location{font-size:0.9em;opacity:0.8}
-.cityevents-event-desc{margin-top:4px;font-size:0.95em}
+.cityevents-event-desc{margin-top:4px;font-size:0.95em;}
