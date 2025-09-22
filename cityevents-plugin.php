@@ -59,7 +59,7 @@ class CityEvents_Plugin {
             'show_date'     => 1,
             'show_location' => 1,
             'cache_minutes' => get_option('cityevents_default_cache_minutes', 15),
-            'date_format'   => get_option('cityevents_default_date_format', get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')),
+            'date_format'   => get_option('cityevents_default_date_format', get_option('date_format') ),
         ], $atts, 'cityevents');
 
         $args = [
@@ -98,7 +98,7 @@ class CityEvents_Plugin {
 
         add_settings_field('cityevents_default_city', __('Citta predefinita', 'cityevents'), function () {
             printf('<input type="text" class="regular-text" name="cityevents_default_city" value="%s" placeholder="roma"/>',
-                esc_attr(get_option('cityevents_default_city', '')));
+                esc_attr(get_option('cityevents_default_city', 'roma')));
         }, 'cityevents-settings', 'cityevents_main');
 
         add_settings_field('cityevents_default_limit', __('Numero eventi', 'cityevents'), function () {
@@ -111,7 +111,7 @@ class CityEvents_Plugin {
 
         add_settings_field('cityevents_default_date_format', __('Formato data', 'cityevents'), function () {
             printf('<input type="text" class="regular-text" name="cityevents_default_date_format" value="%s" placeholder="Y-m-d H:i" />',
-                esc_attr(get_option('cityevents_default_date_format', get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format'))));
+                esc_attr(get_option('cityevents_default_date_format', get_option('date_format') )));
             echo '<p class="description">' . esc_html__('Usa i formati di wp_date(), es. "d/m/Y H:i".', 'cityevents') . '</p>';
         }, 'cityevents-settings', 'cityevents_main');
     }
@@ -149,7 +149,7 @@ class CityEvents_Widget extends WP_Widget {
             'show_date'     => 1,
             'show_location' => 1,
             'cache_minutes' => get_option('cityevents_default_cache_minutes', 15),
-            'date_format'   => get_option('cityevents_default_date_format', get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')),
+            'date_format'   => get_option('cityevents_default_date_format', get_option('date_format') ),
         ];
         $instance = wp_parse_args((array) $instance, $defaults);
 
@@ -209,12 +209,12 @@ class CityEvents_Widget extends WP_Widget {
     public function update($new_instance, $old_instance) {
         $instance = [];
         $instance['title']         = sanitize_text_field($new_instance['title'] ?? '');
-        $instance['city']      = esc_url_raw($new_instance['city'] ?? '');
+        $instance['city']      = sanitize_text_field($new_instance['city'] ?? '');
         $instance['limit']         = max(1, absint($new_instance['limit'] ?? 5));
         $instance['show_date']     = !empty($new_instance['show_date']) ? 1 : 0;
         $instance['show_location'] = !empty($new_instance['show_location']) ? 1 : 0;
         $instance['cache_minutes'] = max(1, absint($new_instance['cache_minutes'] ?? 15));
-        $instance['date_format']   = sanitize_text_field($new_instance['date_format'] ?? (get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')));
+        $instance['date_format']   = sanitize_text_field($new_instance['date_format'] ?? (get_option('date_format')));
         return $instance;
     }
 
@@ -226,7 +226,7 @@ class CityEvents_Widget extends WP_Widget {
             'show_date'     => !empty($instance['show_date']),
             'show_location' => !empty($instance['show_location']),
             'cache_minutes' => intval($instance['cache_minutes'] ?? 15),
-            'date_format'   => $instance['date_format'] ?? (get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format')),
+            'date_format'   => $instance['date_format'] ?? (get_option('date_format') ),
         ];
         echo ($args['before_widget']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Theme-provided HTML wrapper
 
@@ -257,7 +257,7 @@ class CityEvents_Renderer {
             'show_date'     => true,
             'show_location' => true,
             'cache_minutes' => 15,
-            'date_format'   => get_option('date_format') . ' cityevents-plugin.php' . get_option('time_format'),
+            'date_format'   => get_option('date_format'),
         ];
         $p = wp_parse_args($params, $defaults);
 
@@ -353,7 +353,7 @@ class CityEvents_Renderer {
         $code = wp_remote_retrieve_response_code($resp);
         if ($code < 200 || $code >= 300) {
             /* translators: %d = error http  */
-            return new WP_Error('cityevents_http_error', sprintf(__('HTTP %d dal feed', 'cityevents'), $code));
+            return new WP_Error('cityevents_http_error', sprintf(__('HTTP %d dal feed'.$url, 'cityevents'), $code));
         }
 
         $body = wp_remote_retrieve_body($resp);
