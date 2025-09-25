@@ -17,6 +17,11 @@ jobs:
       SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
 
     steps:
+      - name: Check required secrets
+        run: |
+          [ -n "${{ secrets.SVN_USERNAME }}" ] || { echo "Missing secret: SVN_USERNAME"; exit 1; }
+          [ -n "${{ secrets.SVN_PASSWORD }}" ] || { echo "Missing secret: SVN_PASSWORD"; exit 1; }
+    
       - name: Checkout
         uses: actions/checkout@v4
 
