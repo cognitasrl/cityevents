@@ -50,11 +50,11 @@ jobs:
 
       - name: Prepare build dir
         run: |
-          rm -rf .deploy
-          mkdir -p .deploy
-          rsync -av --delete \
-            --exclude-from=".distignore" \
-            ./ ./deploy/
+          rm -rf dist
+          mkdir -p dist
+          rsync -av --delete --exclude-from=".distignore" ./ dist/
+          # porta i CONTENUTI in root (dove opera l’action 10up)
+          rsync -av --delete dist/ ./
 
       # Verifica version matching (opzionale ma utile)
       - name: Check plugin version matches tag
@@ -77,7 +77,6 @@ jobs:
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
           SLUG: cityevents          # <-- slug del plugin su wp.org (uguale all’URL SVN)
-          SOURCE_DIR: .deploy                 # cartella temporanea di build
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
 
