@@ -1,5 +1,5 @@
 {
-  "name": "tdb/cityevents-widget",
+  "name": "cognitasrl/cityevents",
   "description": "Plugin WordPress che mostra eventi da feed JSON in un widget e shortcode.",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
@@ -22,7 +22,7 @@
     }
   },
   "extra": {
-    "installer-name": "cityevents-widget"
+    "installer-name": "cityevents"
   },
   "config": {
     "allow-plugins": {

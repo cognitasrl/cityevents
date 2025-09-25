@@ -50,11 +50,11 @@ jobs:
 
       - name: Prepare build dir
         run: |
-          rm -rf "${BUILD_DIR}"
-          mkdir -p "${BUILD_DIR}/${SLUG}"
+          rm -rf .deploy
+          mkdir -p .deploy
           rsync -av --delete \
             --exclude-from=".distignore" \
-            ./ "${BUILD_DIR}/${SLUG}/"
+            ./ ./deploy/
 
       # Verifica version matching (opzionale ma utile)
       - name: Check plugin version matches tag
@@ -73,11 +73,11 @@ jobs:
           echo "Git tag version: ${{ steps.getver.outputs.version }}"
           [ "$PLUGIN_VER" = "${{ steps.getver.outputs.version }}" ] || { echo "Version mismatch"; exit 1; }
 
-      - name: WordPress Plugin Deploy
+      - name: WordPress plugin deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
           SLUG: cityevents          # <-- slug del plugin su wp.org (uguale all’URL SVN)
-          SOURCE_DIR: build                 # cartella temporanea di build
+          SOURCE_DIR: .deploy                 # cartella temporanea di build
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
 
