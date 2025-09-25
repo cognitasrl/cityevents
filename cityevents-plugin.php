@@ -2,7 +2,7 @@
 /**
  * Plugin Name: cityevents
  * Description: CityEvents – Pubblica l'agenda eventi culturali della tua citta'
- * Version: 0.1.9
+ * Version: 0.1.10
  * Author: Cognita.it
  * License: GPLv2 or later
  * Text Domain: cityevents
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) { exit; }
 class CityEvents_Plugin {
     const TD = 'cityevents';
 
-    const VERSION = '0.1.9';
+    const VERSION = '0.1.10';
 
     public static $url;
 
