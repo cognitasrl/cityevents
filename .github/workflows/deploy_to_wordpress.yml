@@ -70,6 +70,12 @@ jobs:
 
       - name: WordPress Plugin Deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SLUG: cityevents          # <-- slug del plugin su wp.org (uguale all’URL SVN)
+          SOURCE_DIR: build                 # cartella temporanea di build
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+
         with:
           generate-zip: true   # opzionale
           dry-run: false       # metti true per test senza pubblicare
