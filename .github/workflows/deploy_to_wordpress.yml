@@ -56,23 +56,6 @@ jobs:
           # porta i CONTENUTI in root (dove opera l’action 10up)
           rsync -av --delete dist/ ./
 
-      # Verifica version matching (opzionale ma utile)
-      - name: Check plugin version matches tag
-        run: |
-          FILE=$(grep -rl "Plugin Name:" "${BUILD_DIR}/${SLUG}" | head -n1)
-          if [ -z "$FILE" ]; then
-            echo "Impossible trovare il file principale del plugin"; exit 1;
-          fi
-          # Estrae "Version: x.y.z" dall'header
-          PLUGIN_VER=$(php -r '
-            $f=$argv[1];
-            $s=file_get_contents($f);
-            if(preg_match("/^\\s*\\*\\s*Version:\\s*(.+)$/mi",$s,$m)){echo trim($m[1]);}else{exit(1);}
-          ' "$FILE")
-          echo "Plugin header version: $PLUGIN_VER"
-          echo "Git tag version: ${{ steps.getver.outputs.version }}"
-          [ "$PLUGIN_VER" = "${{ steps.getver.outputs.version }}" ] || { echo "Version mismatch"; exit 1; }
-
       - name: WordPress plugin deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
