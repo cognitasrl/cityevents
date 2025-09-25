@@ -31,14 +31,6 @@ jobs:
           VER="${REF#v}"                   # es. 1.0.0
           echo "version=${VER}" >> $GITHUB_OUTPUT
 
-      - name: Prepare build dir
-        run: |
-          rm -rf dist
-          mkdir -p dist
-          rsync -av --delete --exclude-from=".distignore" ./ dist/
-          # porta i CONTENUTI in root (dove opera l’action 10up)
-          rsync -av --delete dist/ ./
-
       - name: WordPress plugin deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
