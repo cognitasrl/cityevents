@@ -13,6 +13,8 @@ jobs:
       SLUG: cityevents          # <-- slug del plugin su wp.org (uguale all’URL SVN)
       BUILD_DIR: build                 # cartella temporanea di build
       PHP_VERSION: '8.3'
+      SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+      SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
 
     steps:
       - name: Checkout
@@ -69,11 +71,5 @@ jobs:
       - name: WordPress Plugin Deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
         with:
-          svn_username: ${{ secrets.SVN_USERNAME }}
-          svn_password: ${{ secrets.SVN_PASSWORD }}
-          slug: ${{ env.SLUG }}
-          version: ${{ steps.getver.outputs.version }}
-          # Directory da cui prendere i file da pubblicare (deve contenere direttamente i file del plugin)
-          build_dir: ${{ env.BUILD_DIR }}/${{ env.SLUG }}
-          # Copia le immagini da .wordpress-org/ verso /assets del repo SVN:
-          assets_dir: .wordpress-org
+          generate-zip: true   # opzionale
+          dry-run: false       # metti true per test senza pubblicare
