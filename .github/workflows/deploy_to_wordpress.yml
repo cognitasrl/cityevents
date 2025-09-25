@@ -11,7 +11,6 @@ jobs:
 
     env:
       SLUG: cityevents          # <-- slug del plugin su wp.org (uguale all’URL SVN)
-      BUILD_DIR: build                 # cartella temporanea di build
       PHP_VERSION: '8.3'
       SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
       SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
@@ -31,22 +30,6 @@ jobs:
           REF="${GITHUB_REF##*/}"          # es. v1.0.0
           VER="${REF#v}"                   # es. 1.0.0
           echo "version=${VER}" >> $GITHUB_OUTPUT
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-          coverage: none
-          tools: composer
-
-      - name: Install Composer deps (no dev)
-        run: composer install --no-dev --prefer-dist --optimize-autoloader
-
-      # Se usi npm/webpack per assets, aggiungi qui build frontend (npm ci && npm run build)
-      # - name: Build assets
-      #   run: |
-      #     npm ci
-      #     npm run build
 
       - name: Prepare build dir
         run: |
