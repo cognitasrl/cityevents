@@ -25,9 +25,12 @@ You can select a city, and the plugin will automatically display all events with
 - Responsive layout for desktop, tablet, and mobile.
 - Content updated in real time.
 
+== Demo site ==
+Visit [the-best.net/cultural-events-in-rome-italy/](https://the-best.net/cultural-events-in-rome-italy/)
+
 == Installation ==
 
-1. Upload the plugin folder `cityevents-widget` to the `/wp-content/plugins/` directory.
+1. Upload the plugin folder `cityevents` to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the “Plugins” menu in WordPress.
 3. Go to **Settings → CityEvents** and choose your reference city.
 4. Add the **CityEvents Widget** to your sidebar or use the shortcode:
@@ -39,9 +42,25 @@ This plugin connects to ONE external service only:
 - Service name: iltaccodibacco.it (events hub for Italy)
 - Domain: https://iltaccodibacco.it
 - Purpose: fetch public cultural events to display on your site
-- Endpoint pattern (GET, HTTPS):
-  https://iltaccodibacco.it/{city-slug}/events.json
-  (e.g., https://iltaccodibacco.it/roma/events.json)
+
+### Shortcode
+Basic:
+```text
+[cityevents]
+```
+
+With options:
+```text
+[cityevents limit="10" city="roma" date_format="F j" cache_minutes="30"]
+```
+
+### City slugs examples:
+bari
+roma
+milano
+taranto
+torino
+
 
 When requests happen:
 - On frontend when the widget/shortcode renders (and optionally in admin previews).

@@ -36,7 +36,7 @@ Visit [the-best.net/cultural-events-in-rome-italy/](https://the-best.net/cultura
 3. Open **Settings → CityEvents** and select your **city**.
 
 ### Manual (FTP/SCP)
-1. Copy the plugin folder to `wp-content/plugins/cityevents-widget`.
+1. Copy the plugin folder to `wp-content/plugins/cityevents`.
 2. Activate the plugin in **Plugins**.
 3. Open **Settings → CityEvents** and select your **city**.
 
@@ -62,27 +62,19 @@ With options:
 
 ## Attributes
 
-| Attribute        | Type   | Default                                 | Description                                                     |
-|------------------|--------|-----------------------------------------|-----------------------------------------------------------------|
-| `limit`          | int    | `5`                                     | Max number of events to show.                                   |
-| `show_date`      | bool   | `0` (false)                             | Show event date/time.                                           |
-| `show_location`  | bool   | `0` (false)                             | Show event location.                                            |
-| `date_format`    | string | WP `date_format` + `time_format`        | PHP date format used for output.                                |
-| `cache_minutes`  | int    | `15`                                    | Cache TTL (minutes) for remote results.                         |
-| `feed_url`       | string | _auto_ (by selected city)               | Override the default feed URL (advanced / debugging).           |
+| Attribute       | Type   | Default                                 | Description                             |
+|-----------------|--------|-----------------------------------------|-----------------------------------------|
+| `limit`         | int    | `5`                                     | Max number of events to show.           |
+| `show_date`     | bool   | `0` (false)                             | Show event date/time.                   |
+| `show_location` | bool   | `0` (false)                             | Show event location.                    |
+| `date_format`   | string | WP `date_format` + `time_format`        | PHP date format used for output.        |
+| `cache_minutes` | int    | `15`                                    | Cache TTL (minutes) for remote results. |
+| `city`          | string | _auto_ (by selected city)               | City slug  (roma, milano, bari, etc.)   |
 
 > The **city** is selected in the plugin settings. The **30 km radius** is applied automatically.
 
 ---
 
-
-## Feed URL format (advanced)
-
-The plugin automatically builds the feed URL based on the selected city. If you need to override it, the URL pattern is:
-
-```
-https://iltaccodibacco.it/{city-slug}/events.json
-```
 
 **City slug rules** (typical permalink rules):
 1. Lowercase all letters.
@@ -90,22 +82,11 @@ https://iltaccodibacco.it/{city-slug}/events.json
 3. Remove accents/diacritics (à → a, é → e, ò → o, ì → i, ù → u).
 4. Collapse repeated hyphens and trim leading/trailing hyphens.
 
-**Examples**
-
-| City name            | City slug              | Feed URL                                                     |
-|----------------------|------------------------|--------------------------------------------------------------|
-| Roma                 | `roma`                 | `https://iltaccodibacco.it/roma/events.json`                 |
-| Milano               | `milano`               | `https://iltaccodibacco.it/milano/events.json`               |
-| Bari                 | `bari`                 | `https://iltaccodibacco.it/bari/events.json`                 |
-| Lecce                | `lecce`                | `https://iltaccodibacco.it/lecce/events.json`                |
-| Reggio nell’Emilia   | `reggio-nell-emilia`   | `https://iltaccodibacco.it/reggio-nell-emilia/events.json`   |
-| Sant'Agata di Puglia | `sant-agata-di-puglia` | `https://iltaccodibacco.it/sant-agata-di-puglia/events.json` |
 
 **Shortcode override** (optional):
 ```text
 [cityevents city="bari"]
 ```
-
 
 
 ## Privacy & Data
