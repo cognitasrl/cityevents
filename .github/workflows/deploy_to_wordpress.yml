@@ -1,9 +1,6 @@
 name: Deploy to WordPress.org
 
 on:
-  push:
-    tags:
-      - 'v*'            # es. v1.0.0
   release:
     types: [published]  # opzionale: parte quando pubblichi una GitHub Release
   workflow_dispatch:          # avvio manuale dal tab Actions
