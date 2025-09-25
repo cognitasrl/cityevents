@@ -8,7 +8,7 @@ on:
     types: [published]
 
 env:
-  PLUGIN_SLUG: cityevents-widget
+  PLUGIN_SLUG: cityevents
 
 jobs:
   build-zip:

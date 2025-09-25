@@ -103,7 +103,7 @@ https://iltaccodibacco.it/{city-slug}/events.json
 
 **Shortcode override** (optional):
 ```text
-[cityevents feed_url="https://iltaccodibacco.it/roma/events.json"]
+[cityevents city="bari"]
 ```
 
 
@@ -141,7 +141,7 @@ This plugin fetches **public event data** from a third-party service (iltaccodib
 - Load path: `/languages`
 - Generate/update the POT file:
 ```bash
-wp i18n make-pot . languages/cityevents-widget.pot
+wp i18n make-pot . languages/cityevents.pot
 ```
 
 ---
@@ -151,7 +151,7 @@ wp i18n make-pot . languages/cityevents-widget.pot
 - Code style: **WordPress Coding Standards (WPCS)**
 - Escape on output (`esc_html()`, `esc_attr()`, `esc_url()`, `wp_kses_post()`); sanitize on save (`sanitize_text_field()`, `esc_url_raw()`, `absint()`, etc.).
 - Translation:
-    - Use a **literal** text domain `'cityevents-widget'` in `__()`, `_e()`, etc.
+    - Use a **literal** text domain `'cityevents'` in `__()`, `_e()`, etc.
     - Add `/* translators: ... */` comments for strings with placeholders.
 - Widgets:
     - Print `$args['before_widget']`, `$args['before_title']`, `$args['after_title']`, `$args['after_widget']` **as provided by the theme** (with an inline PHPCS ignore comment if needed).
